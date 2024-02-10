@@ -1,0 +1,21 @@
+{% extends "baseForm.html" %}
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='../static/css/formstyle.css') }}">
+
+
+{% block title %}
+    <h1>ログイン</h1>
+{% endblock %}
+
+{% block content %}
+    {% from "_formhelpers.html" import render_field %}   <!--_formhelpers.htmlからrender_field関数を使うためインポート-->
+    <form method="POST" novalidate>     <!--ファイルapp.pyのPOSTのために設定-->
+        {{ form.csrf_token }}     <!--csrf攻撃対策としてトークンを使う。-->
+        {{ render_field(form.name) }}     <!--render_field関数の引数に、form.name2を入れている。formはapp.pyのrender_template内にあるformのこと。-->
+        {{ render_field(form.password) }}
+        
+        <br>
+        {{ form.submit() }}  <!--submit2はファイルforms.pyのInputForm2クラス内にある変数。「ログイン」ボタンを表示。-->
+        <a href="{{ url_for('touroku') }}">登録していない方はこちらへ</a>
+    </form>
+{% endblock %}

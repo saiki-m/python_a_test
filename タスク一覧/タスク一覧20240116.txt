@@ -1,0 +1,8 @@
+���ڕW
+flask���g���āATOP�y�[�W���烊���N�u�e�g���X�ցv���쐬���A�����N��Ńe�g���X�������ׂ�悤�ɂ���B
+�^�X�N
+1.TOP�y�[�W��HTML�t�@�C���ō쐬�B���O��top.html�ŁAurl_for�g���B
+2.app.py���쐬�Btetorisu.py���C���|�[�g�B
+3.�e�g���X�̃R�[�h��tetorisu.py�ɓ\��t��
+
+aaa
