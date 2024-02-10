@@ -18,6 +18,10 @@
         {% endblock %}
     </header>
 
+    {% if current_user.is_authenticated %}         <!--ログインしていたら-->
+        <a href="{{ url_for('logout') }}">ログアウト</a>
+    {% endif %}
+
     {% block content %}
     {% endblock %}
 
