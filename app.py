@@ -1,14 +1,34 @@
-import os    # 乱数を設定するためインポート
 from flask import Flask, render_template, session, redirect, url_for, flash
 from forms import LoginForm, RegisterForm
+from flask_login import login_user, logout_user, login_required,  LoginManager
 from models import db, Memo, User
-from flask_login import login_user, logout_user, login_required
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 
+# 設定ファイル読み込み
+app.config.from_object("config.Config")
+# dbとFlaskとの紐づけ
+db.init_app(app)
+# マイグレーションとの紐づけ（Flaskとdb）
+migrate = Migrate(app, db)
+# ▼▼▼ リスト 11-3の追加 ▼▼▼
+# LoginManagerインスタンス
+login_manager = LoginManager()
+# LoginManagerとFlaskとの紐づけ
+login_manager.init_app(app)
+# ▼▼▼ リスト 11-9の追加 ▼▼▼
+# ログインが必要なページにアクセスしようとしたときに表示されるメッセージを変更
+login_manager.login_message = "認証していません：ログインしてください"
+# ▲▲▲ リスト 11-9の追加 ▲▲▲
+# 未認証のユーザーがアクセスしようとした際に
+# リダイレクトされる関数名を設定する
+login_manager.login_view = "login"
 
-# 乱数を設定
-app.config['SECRET_KEY'] = os.urandom(24)
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 
 @app.route("/")
 def hello():
@@ -21,9 +41,9 @@ def login():
     # POST
     if loginform.validate_on_submit():    #validatorsが表示されないなら、  
         # データ入力取得
-        username = loginform.username.data
+        username = loginform.name.data
         password = loginform.password.data
-        # 対象User取得
+        # models.pyのUserから、対象ユーザー取得
         user = User.query.filter_by(username=username).first()
         # 認証判定
         if user is not None and user.check_password(password):
@@ -38,6 +58,19 @@ def login():
     # GET
     return render_template('forms/login.html', form=loginform)    #ログイン画面へ
 
+
+# ログアウト
+@app.route("/logout")
+@login_required     
+def logout():
+    # 現在ログインしているユーザーをログアウトする
+    logout_user()
+    # フラッシュメッセージ
+    flash("ログアウトしました")   
+    # 画面遷移
+    return redirect(url_for("login"))
+
+
 # 新規登録
 @app.route('/forms/register', methods=['GET', 'POST'])
 def touroku():
@@ -46,7 +79,19 @@ def touroku():
     if registerform.validate_on_submit():   
         session['name'] = registerform.name.data           #セッションとして保存。登録完了ページで使う。
         session['password'] = registerform.password.data     
-        
+         # データ入力取得
+        username = registerform.name.data
+        password = registerform.password.data
+        # モデルを生成
+        user = User(username=username)
+        # パスワードハッシュ化
+        user.set_password(password)
+        # 登録処理
+        db.session.add(user)
+        db.session.commit()
+        # フラッシュメッセージ
+        flash("ユーザー登録しました")  
+        # 画面遷移 
         return redirect(url_for('tourokuOK'))   
     
     # GET

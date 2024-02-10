@@ -1,11 +1,9 @@
-{% extends "forms/login.html" %}
+{% extends "forms/baseForm.html" %}
 
-{% block title %}
-    <h1>ユーザー登録</h1>
-{% endblock %}
+{% block title %} ユーザー登録 {% endblock %}
 
 {% block content %}
-    {% from "forms/_formhelpers.html" import render_field %}   <!--_formhelpers.htmlからrender_field関数を使うためインポート-->
+    {% from "forms/_formhelpers.html" import render_field %}   <!--_formhelpers.htmlからインポート-->
     <form method="POST" novalidate>     
         {{ form.csrf_token }}     
         {{ render_field(form.name) }}    

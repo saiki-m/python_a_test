@@ -1,4 +1,4 @@
-{% macro render_field(field) %}       <!--render_field(field)関数を定義-->
+{% macro render_field(field) %}       <!--関数を定義-->
     <dt>{{ field.label }}        <!--（「名前：」などのラベル）-->
     <dd>{{ field(**kwargs)|safe }}   <!--入力欄-->
     {% if field.errors %}      <!--もしバリデーションエラーが出たら-->
