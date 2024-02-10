@@ -32,7 +32,7 @@ def hello():
     return render_template("index.html")
 
 #ログイン
-@app.route('/forms/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     loginform = LoginForm()      #forms.pyのLoginFormクラスからオブジェクトを作る
     # POST
@@ -49,8 +49,6 @@ def login():
             login_user(user)
             # 画面遷移
             return redirect(url_for("top"))
-        # 失敗
-        flash("認証不備です")
 
     # GET
     return render_template('forms/login.html', form=loginform)    #ログイン画面へ

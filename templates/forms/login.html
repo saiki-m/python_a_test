@@ -4,11 +4,18 @@
 
 {% block content %}
     {% from "forms/_formhelpers.html" import render_field %}   <!--_formhelpers.htmlからインポート-->
-    <form method="POST" novalidate>     <!--app.pyのPOSTのため-->
-        {{ form.csrf_token }}     <!--csrf攻撃対策としてトークンを使う。-->
+    <form method="POST" action="{{ url_for('login') }}" novalidate>     <!--app.pyのPOSTのため-->
+        {{ form.hidden_tag() }}
         {{ render_field(form.name) }}     <!--formはapp.pyのrender_template内にあるform-->
         {{ render_field(form.password) }}
         
+
+        {% for message in get_flashed_messages() %}  <!--app.pyのlogin_manager.login_messageの中身、flashの中身を表示-->
+        <div style="color: blue;">
+            {{ message }}
+        </div>
+        {% endfor %}
+
         <br>
         {{ form.submit() }}  
         <a href="{{ url_for('touroku') }}">登録していない方はこちらへ</a>
