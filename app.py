@@ -1,8 +1,8 @@
-from flask import Flask, render_template, session, redirect, url_for, flash
-from forms import LoginForm, RegisterForm
-from flask_login import login_user, logout_user, login_required,  LoginManager
+from flask import Flask, render_template, url_for
+from flask_login import login_required, LoginManager
 from models import db, User
 from flask_migrate import Migrate
+from auth.views import auth_bp       # authは「authentication」の略。日本語に訳すと「認証」。
 
 app = Flask(__name__)
 
@@ -20,82 +20,21 @@ login_manager.init_app(app)
 login_manager.login_message = "認証していません：ログインしてください"
 # 未認証のユーザーがアクセスしようとした際に
 # リダイレクトされる関数名を設定する
-login_manager.login_view = "login"
+login_manager.login_view = "auth.login"
+
+# Blueprintをアプリケーションに登録
+app.register_blueprint(auth_bp)
 
 @login_manager.user_loader   #ユーザー情報を読み込む関数として「Flask-Login」に登録
 def load_user(user_id):
     return User.query.get(int(user_id))    #user_idに対応するユーザー情報を取得
 
 
+
+
 @app.route("/")
 def hello():
     return render_template("index.html")
-
-#ログイン
-@app.route('/login/', methods=['GET', 'POST'])
-def login():
-    loginform = LoginForm()      #forms.pyのLoginFormクラスからオブジェクトを作る
-    # POST
-    if loginform.validate_on_submit():    #validatorsが表示されないなら、  
-        # データ入力取得
-        username = loginform.name.data
-        password = loginform.password.data
-        # models.pyのUserから、対象ユーザー取得
-        user = User.query.filter_by(username=username).first()   #最初に見つけたusernameをuserに入れる
-        # 認証判定
-        if user is not None and user.check_password(password):
-            # 成功
-            # 引数として渡されたuserオブジェクトを使用して、ユーザーをログイン状態にする
-            login_user(user)
-            # 画面遷移
-            return redirect(url_for("top"))
-
-    # GET
-    return render_template('forms/login.html', form=loginform)    #ログイン画面へ
-
-
-# ログアウト
-@app.route("/logout")
-@login_required     
-def logout():
-    # 現在ログインしているユーザーをログアウトする
-    logout_user()
-    # フラッシュメッセージ
-    flash("ログアウトしました")   
-    # 画面遷移
-    return redirect(url_for("login"))
-
-
-# 新規登録
-@app.route('/forms/register', methods=['GET', 'POST'])
-def touroku():
-    registerform = RegisterForm()     #forms.pyのRegisterFormクラスからオブジェクトを作る
-    # POST
-    if registerform.validate_on_submit():   
-        session['name'] = registerform.name.data           #セッションとして保存。登録完了ページで使う。
-        session['password'] = registerform.password.data     
-         # データ入力取得
-        username = registerform.name.data
-        password = registerform.password.data
-        # モデルを生成
-        user = User(username=username)
-        # パスワードハッシュ化
-        user.set_password(password)
-        # 登録処理
-        db.session.add(user)
-        db.session.commit()
-        # フラッシュメッセージ
-        flash("ユーザー登録しました")  
-        # 画面遷移 
-        return redirect(url_for('tourokuOK'))   
-    
-    # GET
-    return render_template('forms/touroku.html', form=registerform)
-
-# 登録完了
-@app.route('/tourokuOK')
-def tourokuOK():
-    return render_template('forms/tourokuOK.html')
 
 
 @app.route('/top')
