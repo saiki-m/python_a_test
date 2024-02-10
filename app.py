@@ -15,29 +15,28 @@ def hello():
 #ログイン
 @app.route('/forms/login', methods=['GET', 'POST'])
 def login():
-    form2 = LoginForm()      #ファイルforms.pyのLoginFormクラスからオブジェクトを作る
+    loginform = LoginForm()      #forms.pyのLoginFormクラスからオブジェクトを作る
     # POST
-    if form2.validate_on_submit():    #validatorsの内容が表示されないなら、  
-        return redirect(url_for('top'))     #redirectとすることで、ユーザー名、パスワードの二重送信を防ぐ。
-    # GETリクエストで、ifが通らなかった場合。form2オブジェクトを引数としてformにわたす。
-    return render_template('forms/login.html', form=form2)    #ログイン画面へ
+    if loginform.validate_on_submit():    #validatorsが表示されないなら、  
+        return redirect(url_for('top'))     #リダイレクトでユーザー名、パスワードの二重送信を防ぐ。
+    # GET
+    return render_template('forms/login.html', form=loginform)    #ログイン画面へ
 
-# 登録
-@app.route('/forms/touroku', methods=['GET', 'POST'])
+# 新規登録
+@app.route('/forms/register', methods=['GET', 'POST'])
 def touroku():
-    form = RegisterForm()     #ファイルforms.pyのRegisterFormクラスからオブジェクトを作る
-        #ファイルforms.pyのRegisterFormクラスからオブジェクトを作る
+    registerform = RegisterForm()     #forms.pyのRegisterFormクラスからオブジェクトを作る
     # POST
-    if form.validate_on_submit():    #validatorsの内容が表示されないなら、
-        session['name'] = form.name.data           #セッションとして保存。登録完了ページで使う。
-        session['password'] = form.password.data     
+    if registerform.validate_on_submit():   
+        session['name'] = registerform.name.data           #セッションとして保存。登録完了ページで使う。
+        session['password'] = registerform.password.data     
         
-        return redirect(url_for('tourokuOK'))   #redirectとすることで、ユーザー名、パスワードの二重送信を防ぐ。PRGパターンのR。
+        return redirect(url_for('tourokuOK'))   
     
-    # GETリクエストで、ifが通らなかった場合。formオブジェクトを引数としてformにわたす。
-    return render_template('forms/touroku.html', form=form)
+    # GET
+    return render_template('forms/touroku.html', form=registerform)
 
-# 登録完了画面
+# 登録完了
 @app.route('/tourokuOK')
 def tourokuOK():
     return render_template('forms/tourokuOK.html')
@@ -46,9 +45,6 @@ def tourokuOK():
 @app.route('/top')
 def top():
     return render_template('top.html')    
-
-
-
 
 
 @app.route('/puzzle') 

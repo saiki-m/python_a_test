@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm                   
 from wtforms import StringField, EmailField, SubmitField, PasswordField     
-from wtforms.validators import DataRequired, Email, Length, EqualTo    #バリデーターを使うためインポート
+from wtforms.validators import DataRequired, Email, Length, EqualTo    
 
 
 # ログイン画面    
@@ -11,8 +11,8 @@ class LoginForm(FlaskForm):
     submit = SubmitField('ログイン')
 
 # 新規登録画面
-class RegisterForm(LoginForm):   #ログイン画面のLoginFormクラスを継承する
+class RegisterForm(LoginForm):   #継承
     confirm_password = PasswordField('パスワード確認：', validators=[EqualTo('password', "パスワードが一致しません")])
     
-    submit = SubmitField('送信')   #送信ボタン  オーバーライドしてる
+    submit = SubmitField('送信')   #オーバーライド
 
