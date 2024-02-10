@@ -13,17 +13,17 @@ def hello():
     return render_template("index.html")
 
 #ログイン
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/forms/login', methods=['GET', 'POST'])
 def login():
     form2 = LoginForm()      #ファイルforms.pyのLoginFormクラスからオブジェクトを作る
     # POST
     if form2.validate_on_submit():    #validatorsの内容が表示されないなら、  
         return redirect(url_for('top'))     #redirectとすることで、ユーザー名、パスワードの二重送信を防ぐ。
     # GETリクエストで、ifが通らなかった場合。form2オブジェクトを引数としてformにわたす。
-    return render_template('login.html', form=form2)    #ログイン画面へ
+    return render_template('forms/login.html', form=form2)    #ログイン画面へ
 
 # 登録
-@app.route('/touroku', methods=['GET', 'POST'])
+@app.route('/forms/touroku', methods=['GET', 'POST'])
 def touroku():
     form = RegisterForm()     #ファイルforms.pyのRegisterFormクラスからオブジェクトを作る
         #ファイルforms.pyのRegisterFormクラスからオブジェクトを作る
@@ -35,12 +35,12 @@ def touroku():
         return redirect(url_for('tourokuOK'))   #redirectとすることで、ユーザー名、パスワードの二重送信を防ぐ。PRGパターンのR。
     
     # GETリクエストで、ifが通らなかった場合。formオブジェクトを引数としてformにわたす。
-    return render_template('touroku.html', form=form)
+    return render_template('forms/touroku.html', form=form)
 
 # 登録完了画面
 @app.route('/tourokuOK')
 def tourokuOK():
-    return render_template('tourokuOK.html')
+    return render_template('forms/tourokuOK.html')
 
 
 @app.route('/top')

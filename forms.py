@@ -2,11 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, EmailField, SubmitField, PasswordField     
 from wtforms.validators import DataRequired, Email, Length, EqualTo    #バリデーターを使うためインポート
 
-#pip install flask-wtf==1.1.1 
 
-# ==================================================
-# Formクラス
-# ==================================================
 # ログイン画面    
 class LoginForm(FlaskForm):
     name = StringField('名前：', validators=[DataRequired('必須入力です')])
