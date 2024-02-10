@@ -4,8 +4,8 @@
 
 {% block content %}
     {% from "forms/_formhelpers.html" import render_field %}   <!--_formhelpers.htmlからインポート-->
-    <form method="POST" action="{{ url_for('login') }}" novalidate>     <!--app.pyのPOSTのため-->
-        {{ form.hidden_tag() }}
+    <form method="POST"  novalidate>     <!--app.pyのPOSTのため-->
+        {{ form.hidden_tag() }}     <!--CSRFの対策として設定-->
         {{ render_field(form.name) }}     <!--formはapp.pyのrender_template内にあるform-->
         {{ render_field(form.password) }}
         

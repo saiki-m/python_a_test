@@ -1,27 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
-# ▼▼▼ リスト 11-1の追加 ▼▼▼
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-# ▲▲▲ リスト 11-1の追加 ▲▲▲
+
 
 # Flask-SQLAlchemyの生成
 db = SQLAlchemy()
 
-# ==================================================
-# モデル
-# ==================================================
-# メモ
-class Memo(db.Model):
-    # テーブル名
-    __tablename__ = 'user'
-    # ID（PK）
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    # タイトル（NULL許可しない）
-    title = db.Column(db.String(50), nullable=False)
-    # 内容
-    content = db.Column(db.Text)
 
-# ▼▼▼ リスト 11-1の追加 ▼▼▼
 # ユーザー
 class User(UserMixin, db.Model):
     # テーブル名
@@ -38,4 +23,3 @@ class User(UserMixin, db.Model):
     # 入力したパスワードとハッシュ化されたパスワードの比較
     def check_password(self, password):
         return check_password_hash(self.password, password)
-# ▲▲▲ リスト 11-1の追加 ▲▲▲

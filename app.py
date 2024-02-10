@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, redirect, url_for, flash
 from forms import LoginForm, RegisterForm
 from flask_login import login_user, logout_user, login_required,  LoginManager
-from models import db, Memo, User
+from models import db, User
 from flask_migrate import Migrate
 
 app = Flask(__name__)
@@ -14,9 +14,9 @@ db.init_app(app)
 migrate = Migrate(app, db)
 # LoginManagerインスタンス
 login_manager = LoginManager()
-# LoginManagerとFlaskとの紐づけ
+# LoginManagerとの紐づけ
 login_manager.init_app(app)
-# ログインが必要なページにアクセスしようとしたときに表示されるメッセージを変更
+# ログインが必要なページにアクセスしようとしたときに表示されるメッセージ
 login_manager.login_message = "認証していません：ログインしてください"
 # 未認証のユーザーがアクセスしようとした際に
 # リダイレクトされる関数名を設定する
@@ -41,7 +41,7 @@ def login():
         username = loginform.name.data
         password = loginform.password.data
         # models.pyのUserから、対象ユーザー取得
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()   #最初に見つけたusernameをuserに入れる
         # 認証判定
         if user is not None and user.check_password(password):
             # 成功
