@@ -1,6 +1,8 @@
 import os    # 乱数を設定するためインポート
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, session, redirect, url_for, flash
 from forms import LoginForm, RegisterForm
+from models import db, Memo, User
+from flask_login import login_user, logout_user, login_required
 
 app = Flask(__name__)
 
@@ -18,7 +20,21 @@ def login():
     loginform = LoginForm()      #forms.pyのLoginFormクラスからオブジェクトを作る
     # POST
     if loginform.validate_on_submit():    #validatorsが表示されないなら、  
-        return redirect(url_for('top'))     #リダイレクトでユーザー名、パスワードの二重送信を防ぐ。
+        # データ入力取得
+        username = loginform.username.data
+        password = loginform.password.data
+        # 対象User取得
+        user = User.query.filter_by(username=username).first()
+        # 認証判定
+        if user is not None and user.check_password(password):
+            # 成功
+            # 引数として渡されたuserオブジェクトを使用して、ユーザーをログイン状態にする
+            login_user(user)
+            # 画面遷移
+            return redirect(url_for("top"))
+        # 失敗
+        flash("認証不備です")
+
     # GET
     return render_template('forms/login.html', form=loginform)    #ログイン画面へ
 
