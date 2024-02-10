@@ -1,9 +1,9 @@
 {% macro render_field(field) %}       <!--render_field(field)関数を定義-->
-    <dt>{{ field.label }}        <!--第１引数の中身を画面に表示（「名前：」など）-->
-    <dd>{{ field(**kwargs)|safe }}   <!--たぶんユーザー名などの入力欄-->
-    {% if field.errors %}      <!--もしバリデーションでエラーが出たら-->
+    <dt>{{ field.label }}        <!--（「名前：」などのラベル）-->
+    <dd>{{ field(**kwargs)|safe }}   <!--入力欄-->
+    {% if field.errors %}      <!--もしバリデーションエラーが出たら-->
         <ul style="color: red;">
-        {% for error in field.errors %}    <!--for文の繰り返しで、エラーの文章を赤く表示する-->
+        {% for error in field.errors %}    <!--エラーの文章を赤く表示する-->
             <li>{{ error }}</li>
         {% endfor %}
         </ul>

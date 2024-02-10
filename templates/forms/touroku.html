@@ -1,4 +1,4 @@
-{% extends "forms/baseForm.html" %}
+{% extends "forms/login.html" %}
 
 {% block title %}
     <h1>ユーザー登録</h1>
@@ -6,12 +6,14 @@
 
 {% block content %}
     {% from "forms/_formhelpers.html" import render_field %}   <!--_formhelpers.htmlからrender_field関数を使うためインポート-->
-    <form method="POST" novalidate>       <!--ファイルapp.pyのPOSTのために設定-->
-        {{ form.csrf_token }}      <!--csrf攻撃対策としてトークンを使う。-->
-        {{ render_field(form.name) }}       <!--render_field関数の引数に、form.nameを入れている。formはapp.pyのrender_template内にあるformのこと。-->
+    <form method="POST" novalidate>     
+        {{ form.csrf_token }}     
+        {{ render_field(form.name) }}    
         {{ render_field(form.password) }}
         {{ render_field(form.confirm_password) }}
+        
         <br>
-        {{ form.submit() }}  <!--submitはファイルforms.pyのInputFormクラス内にある変数。「送信」ボタンを表示。-->
+        {{ form.submit() }}
     </form>
+
 {% endblock %}
